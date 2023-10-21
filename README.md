@@ -17,7 +17,8 @@ export POSTGRES_JDBC_URL=jdbc:postgresql://localhost:5432/${POSTGRES_DB}
 
 If you want to see code coverage when test fails then run:
 ```bash
-$ cd build/jacocoHtml/; python3 -m http.server
+$ cd build/jacocoHtml/
+$ python3 -m http.server
 ```
 
 You can see report at http://localhost:8000/com.example.urbancart/
