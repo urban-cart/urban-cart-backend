@@ -1,9 +1,7 @@
-package com.example.urbancart.controller;
+package com.example.urbancart.product;
 
 import com.example.urbancart.common.CustomPage;
-import com.example.urbancart.dto.product.ProductInputDto;
-import com.example.urbancart.dto.product.ProductOutputDto;
-import com.example.urbancart.service.ProductService;
+import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +29,12 @@ public class ProductController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ProductOutputDto save(@RequestBody ProductInputDto product) {
+  public Product save(@RequestBody ProductInputDto product) {
     return this.productService.save(product);
   }
 
   @GetMapping
-  public CustomPage<ProductOutputDto> findAll(
+  public CustomPage<Product> findAll(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer size,
       @RequestParam(defaultValue = "price") String sortBy,
@@ -47,12 +45,12 @@ public class ProductController {
   }
 
   @GetMapping("/{id}")
-  public ProductOutputDto findById(@PathVariable UUID id) {
+  public Product findById(@PathVariable UUID id) {
     return this.productService.findById(id);
   }
 
   @PutMapping("/{id}")
-  public ProductOutputDto update(@PathVariable UUID id, @RequestBody ProductInputDto product) {
+  public Product update(@PathVariable UUID id, @RequestBody ProductInputDto product) {
     return this.productService.update(id, product);
   }
 

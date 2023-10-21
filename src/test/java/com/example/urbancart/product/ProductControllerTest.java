@@ -1,4 +1,4 @@
-package com.example.urbancart.controller;
+package com.example.urbancart.product;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -7,9 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.example.urbancart.common.CustomPage;
-import com.example.urbancart.dto.product.ProductInputDto;
-import com.example.urbancart.dto.product.ProductOutputDto;
-import com.example.urbancart.service.ProductService;
+import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.Arrays;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -33,8 +31,7 @@ public class ProductControllerTest {
   @Test
   public void findAll_ReturnsListOfProducts() throws Exception {
     var productPage =
-        new CustomPage<ProductOutputDto>(
-            new PageImpl<>(Arrays.asList(new ProductOutputDto(), new ProductOutputDto())));
+        new CustomPage<Product>(new PageImpl<>(Arrays.asList(new Product(), new Product())));
     when(productService.findAll(
             anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString()))
         .thenReturn(productPage);
@@ -49,8 +46,7 @@ public class ProductControllerTest {
   @Test
   public void findAll_ReturnsListOfProductsWithPagination() throws Exception {
     var productPage =
-        new CustomPage<ProductOutputDto>(
-            new PageImpl<>(Arrays.asList(new ProductOutputDto(), new ProductOutputDto())));
+        new CustomPage<Product>(new PageImpl<>(Arrays.asList(new Product(), new Product())));
     when(productService.findAll(
             anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString()))
         .thenReturn(productPage);
@@ -65,7 +61,7 @@ public class ProductControllerTest {
   @Test
   public void findProductById_ReturnsProduct() throws Exception {
     UUID productId = UUID.randomUUID();
-    var product = new ProductOutputDto();
+    var product = new Product();
     when(productService.findById(productId)).thenReturn(product);
     mockMvc
         .perform(get("/products/{id}", productId))
@@ -75,7 +71,7 @@ public class ProductControllerTest {
 
   @Test
   public void create_ReturnsCreatedProduct() throws Exception {
-    var product = new ProductOutputDto();
+    var product = new Product();
     when(productService.save(Mockito.any(ProductInputDto.class))).thenReturn(product);
     mockMvc
         .perform(post("/products").contentType(MediaType.APPLICATION_JSON).content("{}"))
@@ -86,7 +82,7 @@ public class ProductControllerTest {
   @Test
   public void update_ReturnsUpdatedProduct() throws Exception {
     UUID productId = UUID.randomUUID();
-    var product = new ProductOutputDto();
+    var product = new Product();
     when(productService.update(Mockito.any(UUID.class), Mockito.any(ProductInputDto.class)))
         .thenReturn(product);
     mockMvc

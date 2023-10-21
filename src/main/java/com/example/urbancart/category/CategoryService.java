@@ -1,20 +1,14 @@
-package com.example.urbancart.service;
+package com.example.urbancart.category;
 
-import com.example.urbancart.dto.category.CategoryInputDto;
-import com.example.urbancart.model.Category;
-import com.example.urbancart.repository.CategoryRepository;
+import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -30,39 +24,25 @@ public class CategoryService {
   }
 
   public Category save(CategoryInputDto category) {
-    Category categoryModel = modelMapper.map(category, Category.class);
+    var categoryModel = modelMapper.map(category, Category.class);
     return this.categoryRepository.save(categoryModel);
   }
 
-  public Long count() {
-    return this.categoryRepository.count();
-  }
-
-  @Transactional
   public List<Category> findAll() {
     return this.categoryRepository.findAll();
   }
 
-  @Cacheable(key = "#id", unless = "#result == null", value = "category")
+  @Cacheable(value = "category", key = "#id", unless = "#result == null")
   public Category findById(UUID id) {
     return this.categoryRepository
         .findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
   }
 
-  public Set<Category> findAllByIds(Set<UUID> ids) {
-    return ids.stream().map(this::findById).collect(Collectors.toSet());
-  }
-
-  @CachePut(key = "#category.id", unless = "#result == null", value = "category")
+  @CachePut(key = "#id", unless = "#result == null", value = "category")
   public Category update(UUID id, CategoryInputDto category) {
-    Category categoryModel = modelMapper.map(category, Category.class);
+    var categoryModel = modelMapper.map(category, Category.class);
     categoryModel.setId(id);
     return this.categoryRepository.save(categoryModel);
-  }
-
-  @CacheEvict(key = "#id", value = "category")
-  public void deleteById(UUID id) {
-    this.categoryRepository.deleteById(id);
   }
 }

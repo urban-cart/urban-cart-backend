@@ -1,12 +1,13 @@
-package com.example.urbancart.model;
+package com.example.urbancart.category;
 
+import com.example.urbancart.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -42,13 +43,12 @@ public class Category {
   @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
+  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+  private Set<Product> products;
+
   @PrePersist
   @PreUpdate
   public void prePersist() {
     this.name = this.name.toLowerCase();
   }
-
-  @JsonIgnore
-  @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
-  private Set<Product> products;
 }

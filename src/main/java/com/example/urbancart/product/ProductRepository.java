@@ -1,6 +1,5 @@
-package com.example.urbancart.repository;
+package com.example.urbancart.product;
 
-import com.example.urbancart.model.Product;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

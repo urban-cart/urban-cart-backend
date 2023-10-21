@@ -1,4 +1,4 @@
-package com.example.urbancart.service;
+package com.example.urbancart.product;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,12 +8,10 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import com.example.urbancart.dto.product.ProductInputDto;
-import com.example.urbancart.dto.product.ProductOutputDto;
-import com.example.urbancart.model.Product;
-import com.example.urbancart.repository.ProductRepository;
+import com.example.urbancart.category.Category;
+import com.example.urbancart.category.CategoryService;
+import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,10 +52,8 @@ class ProductServiceTest {
   @Test
   void testFindById() {
     UUID productId = UUID.randomUUID();
-    var productOutputDto = new ProductOutputDto();
     var product = new Product();
     when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-    when(modelMapper.map(eq(product), eq(ProductOutputDto.class))).thenReturn(productOutputDto);
     var result = productService.findById(productId);
     assertNotNull(result);
     verify(productRepository, times(1)).findById(productId);
@@ -74,48 +70,59 @@ class ProductServiceTest {
 
   @Test
   void testSave() {
-    var product = new Product();
-    var uuidSet = new HashSet<UUID>();
-    var productInputDto = new ProductInputDto();
+    var uuid = UUID.randomUUID();
+    var category = new Category();
+    category.setId(uuid);
 
-    productInputDto.setCategories(uuidSet);
+    when(categoryService.findById(eq(uuid))).thenReturn(category);
+
+    var productInputDto = new ProductInputDto();
+    productInputDto.setCategoryId(uuid);
+
+    var product = new Product();
+    product.setCategory(category);
+
     when(modelMapper.map(eq(productInputDto), eq(Product.class))).thenReturn(product);
-    when(categoryService.findAllByIds(eq(uuidSet))).thenReturn(new HashSet<>());
     when(productRepository.save(any(Product.class))).thenReturn(product);
-    when(modelMapper.map(eq(product), eq(ProductOutputDto.class)))
-        .thenReturn(new ProductOutputDto());
 
     var result = productService.save(productInputDto);
     assertNotNull(result);
+
     verify(productRepository, times(1)).save(product);
   }
 
   @Test
   void testUpdate() {
     UUID productId = UUID.randomUUID();
-    var uuidSet = new HashSet<UUID>();
-    var updatedProduct = new ProductInputDto();
-    updatedProduct.setCategories(uuidSet);
-    updatedProduct.setName("Updated Name");
-    var existingProduct = new Product();
-    var outputDto = new ProductOutputDto();
-    outputDto.setName("Updated Name");
-
-    when(categoryService.findAllByIds(eq(uuidSet))).thenReturn(new HashSet<>());
-    when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
-    when(productRepository.save(eq(existingProduct))).thenReturn(existingProduct);
-    when(modelMapper.map(eq(existingProduct), eq(ProductOutputDto.class))).thenReturn(outputDto);
-    var result = productService.update(productId, updatedProduct);
-
+    var product = new Product();
+    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+    when(productRepository.save(any(Product.class))).thenReturn(product);
+    var result = productService.update(productId, new ProductInputDto());
     assertNotNull(result);
-    verify(productRepository, times(1)).findById(productId);
-    verify(productRepository, times(1)).save(existingProduct);
+    verify(productRepository, times(1)).save(product);
   }
 
   @Test
   void testRemove() {
     productService.remove(UUID.randomUUID(), true);
     verify(productRepository, times(1)).deleteById(any(UUID.class));
+  }
+
+  @Test
+  void testRemoveSoftDelete() {
+    productService.remove(UUID.randomUUID(), false);
+    verify(productRepository, times(1)).softDeleteById(any(UUID.class));
+  }
+
+  @Test
+  void testUpdate_notFound() {
+    UUID productId = UUID.randomUUID();
+    when(productRepository.findById(productId)).thenReturn(Optional.empty());
+    assertThrows(
+        ResponseStatusException.class,
+        () -> {
+          productService.update(productId, new ProductInputDto());
+        });
   }
 
   @Test

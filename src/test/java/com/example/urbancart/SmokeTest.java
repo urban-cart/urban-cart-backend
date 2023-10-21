@@ -2,9 +2,9 @@ package com.example.urbancart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.urbancart.controller.CategoryController;
-import com.example.urbancart.controller.HelloController;
-import com.example.urbancart.controller.ProductController;
+import com.example.urbancart.category.CategoryController;
+import com.example.urbancart.hello.HelloController;
+import com.example.urbancart.product.ProductController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.example.urbancart.config;
+package com.example.urbancart.common.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +21,7 @@ public class CacheConfig {
 
   @Bean
   public CacheManager cacheManager() {
-    CaffeineCacheManager cacheManager = new CaffeineCacheManager("product");
+    CaffeineCacheManager cacheManager = new CaffeineCacheManager("product", "category");
     cacheManager.setCaffeine(caffeineCacheBuilder());
     return cacheManager;
   }

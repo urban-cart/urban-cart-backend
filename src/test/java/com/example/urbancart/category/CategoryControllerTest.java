@@ -1,4 +1,4 @@
-package com.example.urbancart.controller;
+package com.example.urbancart.category;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -6,9 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.example.urbancart.dto.category.CategoryInputDto;
-import com.example.urbancart.model.Category;
-import com.example.urbancart.service.CategoryService;
+import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -61,10 +59,15 @@ public class CategoryControllerTest {
   }
 
   @Test
-  public void deleteById_ReturnsCategory() throws Exception {
+  public void update_ReturnsCategory() throws Exception {
     UUID categoryId = UUID.randomUUID();
     Category category = new Category();
+    category.setId(categoryId);
     when(categoryService.update(any(UUID.class), any(CategoryInputDto.class))).thenReturn(category);
-    mockMvc.perform(delete("/categories/" + categoryId)).andExpect(status().isNoContent());
+    mockMvc
+        .perform(put("/categories/" + categoryId))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id").value(categoryId.toString()));
   }
 }

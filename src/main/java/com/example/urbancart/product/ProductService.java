@@ -1,10 +1,8 @@
-package com.example.urbancart.service;
+package com.example.urbancart.product;
 
+import com.example.urbancart.category.CategoryService;
 import com.example.urbancart.common.CustomPage;
-import com.example.urbancart.dto.product.ProductInputDto;
-import com.example.urbancart.dto.product.ProductOutputDto;
-import com.example.urbancart.model.Product;
-import com.example.urbancart.repository.ProductRepository;
+import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,61 +32,54 @@ public class ProductService {
     this.categoryService = categoryService;
   }
 
-  public CustomPage<ProductOutputDto> findAll(
+  public CustomPage<Product> findAll(
       int page, int size, String sortBy, String sortDirection, Boolean isDeleted, String search) {
 
     var direction =
         sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-    Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+    var pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
     var data =
-        productRepository.findAllByIsDeletedAndNameContainingIgnoreCase(
+        this.productRepository.findAllByIsDeletedAndNameContainingIgnoreCase(
             pageable, isDeleted, search);
-    var output = data.map(product -> modelMapper.map(product, ProductOutputDto.class));
-    return new CustomPage<ProductOutputDto>(output);
+    return new CustomPage<Product>(data);
   }
 
   @Cacheable(key = "#id", unless = "#result == null", value = "product")
-  public ProductOutputDto findById(UUID id) {
+  public Product findById(UUID id) {
     var data =
         this.productRepository
             .findById(id)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-    return modelMapper.map(data, ProductOutputDto.class);
+    return data;
   }
 
-  public ProductOutputDto save(ProductInputDto product) {
+  public Product save(ProductInputDto product) {
     var productToSave = modelMapper.map(product, Product.class);
-    var categories = categoryService.findAllByIds(product.getCategories());
-    productToSave.setCategories(categories);
-    var data = this.productRepository.save(productToSave);
-    return modelMapper.map(data, ProductOutputDto.class);
+    var category = categoryService.findById(product.getCategoryId());
+    productToSave.setCategory(category);
+    return this.productRepository.save(productToSave);
   }
 
   @CachePut(key = "#id", unless = "#result == null", value = "product")
-  public ProductOutputDto update(UUID id, ProductInputDto product) {
-    var categories = categoryService.findAllByIds(product.getCategories());
+  public Product update(UUID id, ProductInputDto product) {
     var productToUpdate =
         this.productRepository
             .findById(id)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+    var category = categoryService.findById(product.getCategoryId());
     productToUpdate.setName(product.getName());
     productToUpdate.setPrice(product.getPrice());
     productToUpdate.setQuantity(product.getQuantity());
     productToUpdate.setDescription(product.getDescription());
-    productToUpdate.setCategories(categories);
-    var data = this.productRepository.save(productToUpdate);
-    return modelMapper.map(data, ProductOutputDto.class);
+    productToUpdate.setCategory(category);
+    return this.productRepository.save(productToUpdate);
   }
 
   @CacheEvict(key = "#id", value = "product")
   public void remove(UUID id, Boolean isHardDelete) {
     if (isHardDelete) this.productRepository.deleteById(id);
     else this.productRepository.softDeleteById(id);
-  }
-
-  public long count() {
-    return this.productRepository.count();
   }
 }
