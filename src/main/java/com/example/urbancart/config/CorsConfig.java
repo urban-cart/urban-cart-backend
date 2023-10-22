@@ -1,4 +1,4 @@
-package com.example.urbancart.common.config;
+package com.example.urbancart.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

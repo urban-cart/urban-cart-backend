@@ -1,4 +1,4 @@
-package com.example.urbancart.common.config;
+package com.example.urbancart.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

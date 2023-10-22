@@ -4,8 +4,8 @@ import com.example.urbancart.category.CategoryService;
 import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,21 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
   private final ProductRepository productRepository;
   private final CategoryService categoryService;
   private final ModelMapper modelMapper;
-
-  @Autowired
-  public ProductService(
-      ProductRepository productRepository,
-      ModelMapper modelMapper,
-      CategoryService categoryService) {
-    this.productRepository = productRepository;
-    this.modelMapper = modelMapper;
-    this.categoryService = categoryService;
-  }
 
   public CustomPage<Product> findAll(
       int page,
