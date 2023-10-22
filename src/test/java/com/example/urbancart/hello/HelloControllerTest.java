@@ -49,4 +49,12 @@ public class HelloControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().string("Hello, John!"));
   }
+
+  @Test
+  public void testXSS() throws Exception {
+    mockMvc
+        .perform(get("/hello").param("name", "<script>alert('XSS')</script>"))
+        .andExpect(status().isOk())
+        .andExpect(content().string("Hello, &lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;!"));
+  }
 }
