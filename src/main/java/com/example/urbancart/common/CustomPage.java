@@ -1,18 +1,18 @@
 package com.example.urbancart.common;
 
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class CustomPage<T> {
-  private List<T> data;
-  private int page;
-  private int size;
-  private long count;
-  private long totalPages;
+  private List<T> data = null;
+  private int page = 0;
+  private int size = 0;
+  private long count = 0;
+  private long totalPages = 0;
 
   public CustomPage(Page<T> page) {
     this.data = page.getContent();

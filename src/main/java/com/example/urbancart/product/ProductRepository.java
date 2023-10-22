@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+  Page<Product> findAllByIsDeletedAndNameContainingIgnoreCaseAndCategoryId(
+      Pageable pageable, Boolean isDeleted, String search, Integer categoryId);
+
   Page<Product> findAllByIsDeletedAndNameContainingIgnoreCase(
       Pageable pageable, Boolean isDeleted, String search);
 

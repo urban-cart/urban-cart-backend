@@ -33,14 +33,23 @@ public class ProductService {
   }
 
   public CustomPage<Product> findAll(
-      int page, int size, String sortBy, String sortDirection, Boolean isDeleted, String search) {
+      int page,
+      int size,
+      String sortBy,
+      String sortDirection,
+      Boolean isDeleted,
+      String search,
+      Integer categoryId) {
 
     var direction =
         sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
     var pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
     var data =
-        this.productRepository.findAllByIsDeletedAndNameContainingIgnoreCase(
-            pageable, isDeleted, search);
+        (categoryId == null)
+            ? this.productRepository.findAllByIsDeletedAndNameContainingIgnoreCase(
+                pageable, isDeleted, search)
+            : this.productRepository.findAllByIsDeletedAndNameContainingIgnoreCaseAndCategoryId(
+                pageable, isDeleted, search, categoryId);
     return new CustomPage<Product>(data);
   }
 

@@ -2,6 +2,7 @@ package com.example.urbancart.product;
 
 import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
+import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class ProductController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Product save(@RequestBody ProductInputDto product) {
+  public Product save(@RequestBody @Valid ProductInputDto product) {
     return this.productService.save(product);
   }
 
@@ -40,8 +41,10 @@ public class ProductController {
       @RequestParam(defaultValue = "price") String sortBy,
       @RequestParam(defaultValue = "desc") String sortDirection,
       @RequestParam(defaultValue = "false") Boolean isDeleted,
-      @RequestParam(defaultValue = "") String search) {
-    return this.productService.findAll(page, size, sortBy, sortDirection, isDeleted, search);
+      @RequestParam(defaultValue = "") String search,
+      @RequestParam(required = false) Integer categoryId) {
+    return this.productService.findAll(
+        page, size, sortBy, sortDirection, isDeleted, search, categoryId);
   }
 
   @GetMapping("/{id}")
@@ -50,7 +53,7 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  public Product update(@PathVariable UUID id, @RequestBody ProductInputDto product) {
+  public Product update(@PathVariable UUID id, @RequestBody @Valid ProductInputDto product) {
     return this.productService.update(id, product);
   }
 
