@@ -4,37 +4,22 @@ import com.example.urbancart.category.Category;
 import com.example.urbancart.category.CategoryRepository;
 import com.example.urbancart.product.Product;
 import com.example.urbancart.product.ProductRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Seeder {
-  private static final String[] CATEGORY_NAMES = {
-    "Electronics",
-    "Clothing",
-    "Furniture",
-    "Grocery",
-    "Books",
-    "Toys",
-    "Sports",
-    "Beauty",
-    "Health",
-    "Automotive",
-    "Jewelry",
-    "Movies",
-    "Music",
-    "Garden",
-    "Tools",
-    "Pet",
-    "Baby",
-    "Industrial",
-    "Software",
-    "Shoes",
-  };
+  private static String categorySeederFile = "data/categories.json";
 
   private final CategoryRepository categoryRepository;
   private final ProductRepository productRepository;
@@ -46,18 +31,19 @@ public class Seeder {
   }
 
   @PostConstruct
-  public void seed() {
+  public void seed() throws IOException {
     var categories = seedCategories();
     seedProducts(categories);
   }
 
-  private List<Category> seedCategories() {
+  private List<Category> seedCategories() throws IOException {
     if (categoryRepository.count() == 0) {
-
-      for (String name : CATEGORY_NAMES) {
-        var category = new Category();
-        category.setName(name);
-        category.setDescription(String.format("This is %s category", name));
+      Resource resource = new ClassPathResource(categorySeederFile);
+      String jsonString =
+          new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+      ObjectMapper objectMapper = new ObjectMapper();
+      var categories = objectMapper.readValue(jsonString, new TypeReference<List<Category>>() {});
+      for (var category : categories) {
         categoryRepository.save(category);
       }
     }

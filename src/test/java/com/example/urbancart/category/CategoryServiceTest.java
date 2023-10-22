@@ -26,7 +26,8 @@ class CategoryServiceTest {
 
   @Test
   void testSave() {
-    CategoryInputDto categoryInputDto = new CategoryInputDto("sample", "sample description");
+    CategoryInputDto categoryInputDto =
+        new CategoryInputDto("sample", "sample description", "sample image url");
     Category category = new Category();
     when(modelMapper.map(categoryInputDto, Category.class)).thenReturn(category);
     when(categoryRepository.save(category)).thenReturn(category);
@@ -52,7 +53,8 @@ class CategoryServiceTest {
   @Test
   void testUpdate() {
     Long categoryId = Long.MIN_VALUE;
-    CategoryInputDto categoryInputDto = new CategoryInputDto("updated", "updated description");
+    CategoryInputDto categoryInputDto =
+        new CategoryInputDto("updated", "updated description", "updated image url");
     Category category = new Category();
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
     when(categoryRepository.save(category)).thenReturn(category);

@@ -23,3 +23,11 @@ $ python3 -m http.server
 
 You can see report at http://localhost:8000/com.example.urbancart/
 ___
+
+
+This project uses images that were downloaded from Unsplash, a platform with free-license images. I do not own these images, and they belong to their respective creators.
+
+---
+**Copyright Disclaimer:**
+
+`All images used in this project are the property of their respective creators and are available on Unsplash under a free license. I do not claim ownership of these images. If you have any concerns regarding the use of specific images, please contact the creators directly on Unsplash.`

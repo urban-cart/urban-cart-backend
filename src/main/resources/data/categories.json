@@ -1,0 +1,98 @@
+[
+    {
+      "id": 1,
+      "name": "electronics",
+      "description": "This is electronics category",
+      "imageUrl": "http://localhost:8080/images/electronics.png"
+    },
+    {
+      "id": 2,
+      "name": "clothing",
+      "description": "This is clothing category",
+      "imageUrl": "http://localhost:8080/images/clothing.png"
+    },
+    {
+      "id": 3,
+      "name": "furniture",
+      "description": "This is furniture category",
+      "imageUrl": "http://localhost:8080/images/furniture.png"
+    },
+    {
+      "id": 4,
+      "name": "grocery",
+      "description": "This is grocery category",
+      "imageUrl": "http://localhost:8080/images/grocery.png"
+    },
+    {
+      "id": 5,
+      "name": "books",
+      "description": "This is books category",
+      "imageUrl": "http://localhost:8080/images/books.png"
+    },
+    {
+      "id": 6,
+      "name": "toys",
+      "description": "This is toys category",
+      "imageUrl": "http://localhost:8080/images/toys.png"
+    },
+    {
+      "id": 7,
+      "name": "sports",
+      "description": "This is sports category",
+      "imageUrl": "http://localhost:8080/images/sports.png"
+    },
+    {
+      "id": 8,
+      "name": "beauty",
+      "description": "This is beauty category",
+      "imageUrl": "http://localhost:8080/images/beauty.png"
+    },
+    {
+      "id": 9,
+      "name": "health",
+      "description": "This is health category",
+      "imageUrl": "http://localhost:8080/images/health.png"
+    },
+    {
+      "id": 10,
+      "name": "automotive",
+      "description": "This is automotive category",
+      "imageUrl": "http://localhost:8080/images/automotive.png"
+    },
+    {
+      "id": 11,
+      "name": "jewelry",
+      "description": "This is jewelry category",
+      "imageUrl": "http://localhost:8080/images/jewelry.png"
+    },
+    {
+      "id": 12,
+      "name": "music",
+      "description": "This is music category",
+      "imageUrl": "http://localhost:8080/images/music.png"
+    },
+    {
+      "id": 13,
+      "name": "tools",
+      "description": "This is tools category",
+      "imageUrl": "http://localhost:8080/images/tools.png"
+    },
+    {
+      "id": 14,
+      "name": "pet",
+      "description": "This is pet category",
+      "imageUrl": "http://localhost:8080/images/pet.png"
+    },
+    {
+      "id": 15,
+      "name": "baby",
+      "description": "This is baby category",
+      "imageUrl": "http://localhost:8080/images/baby.png"
+    },
+    {
+      "id": 16,
+      "name": "software",
+      "description": "This is software category",
+      "imageUrl": "http://localhost:8080/images/software.png"
+    }
+  ]
