@@ -49,6 +49,9 @@ public class Category {
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
   private Set<Product> products;
 
+  @Column(name = "image_url")
+  private String imageUrl;
+
   @PrePersist
   @PreUpdate
   public void prePersist() {

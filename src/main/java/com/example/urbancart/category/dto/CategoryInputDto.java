@@ -13,4 +13,6 @@ public class CategoryInputDto {
   @NotBlank @NotNull private String name;
 
   private String description;
+
+  private String imageUrl;
 }
