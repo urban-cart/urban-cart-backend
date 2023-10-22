@@ -38,6 +38,9 @@ public class AuthService {
     refreshToken = authHeader.substring(7); // The part after "Bearer "
     userEmail = jwtService.extractEmail(refreshToken);
     var user = userService.findByEmail(userEmail);
+    if (user == null) {
+      throw new IllegalArgumentException("Invalid token");
+    }
     return jwtService.generateTokens(user);
   }
 
