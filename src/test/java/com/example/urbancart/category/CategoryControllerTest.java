@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,37 +36,53 @@ public class CategoryControllerTest {
 
   @Test
   public void findById_ReturnsCategory() throws Exception {
-    UUID categoryId = UUID.randomUUID();
+    Long categoryId = Long.MIN_VALUE;
     Category category = new Category();
-    category.setId(categoryId);
+    category.setId(1);
+    category.setName("sample");
     when(categoryService.findById(categoryId)).thenReturn(category);
     mockMvc
         .perform(get("/categories/" + categoryId))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(categoryId.toString()));
+        .andExpect(content().json("{\"id\":1, \"name\":\"sample\"}"));
   }
 
   @Test
   public void save_ReturnsCategory() throws Exception {
-    Category category = new Category();
+    var category = new Category();
+    category.setName("sample");
+    category.setId(Long.MIN_VALUE);
+    category.setDescription("sample description");
     when(categoryService.save(any(CategoryInputDto.class))).thenReturn(category);
     mockMvc
-        .perform(post("/categories"))
+        .perform(
+            post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"sample\", \"description\": \"sample description\"}"))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            content()
+                .json(
+                    "{\"id\":-9223372036854775808,\"name\":\"sample\",\"description\":\"sample description\"}"));
   }
 
   @Test
   public void update_ReturnsCategory() throws Exception {
-    UUID categoryId = UUID.randomUUID();
+    var categoryId = 1;
     Category category = new Category();
     category.setId(categoryId);
-    when(categoryService.update(any(UUID.class), any(CategoryInputDto.class))).thenReturn(category);
+    category.setName("oldname");
+    when(categoryService.update(any(Long.class), any(CategoryInputDto.class))).thenReturn(category);
     mockMvc
-        .perform(put("/categories/" + categoryId))
+        .perform(
+            put("/categories/" + categoryId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"oldname\", \"description\": \"updated description\"}"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(categoryId.toString()));
+        .andExpect(jsonPath("$.id").value(categoryId))
+        .andExpect(jsonPath("$.name").value("oldname"));
   }
 }

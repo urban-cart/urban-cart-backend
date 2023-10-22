@@ -1,14 +1,12 @@
 package com.example.urbancart.category;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +26,7 @@ class CategoryServiceTest {
 
   @Test
   void testSave() {
-    CategoryInputDto categoryInputDto = new CategoryInputDto();
+    CategoryInputDto categoryInputDto = new CategoryInputDto("sample", "sample description");
     Category category = new Category();
     when(modelMapper.map(categoryInputDto, Category.class)).thenReturn(category);
     when(categoryRepository.save(category)).thenReturn(category);
@@ -41,7 +39,7 @@ class CategoryServiceTest {
 
   @Test
   void findById_NotFound() {
-    UUID categoryId = UUID.randomUUID();
+    Long categoryId = Long.MIN_VALUE;
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
     assertThrows(
@@ -53,10 +51,10 @@ class CategoryServiceTest {
 
   @Test
   void testUpdate() {
-    UUID categoryId = UUID.randomUUID();
-    CategoryInputDto categoryInputDto = new CategoryInputDto();
+    Long categoryId = Long.MIN_VALUE;
+    CategoryInputDto categoryInputDto = new CategoryInputDto("updated", "updated description");
     Category category = new Category();
-    when(modelMapper.map(categoryInputDto, Category.class)).thenReturn(category);
+    when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
     when(categoryRepository.save(category)).thenReturn(category);
 
     var result = categoryService.update(categoryId, categoryInputDto);
@@ -78,7 +76,7 @@ class CategoryServiceTest {
 
   @Test
   void testFindById() {
-    UUID categoryId = UUID.randomUUID();
+    Long categoryId = Long.MIN_VALUE;
     Category category = new Category();
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 

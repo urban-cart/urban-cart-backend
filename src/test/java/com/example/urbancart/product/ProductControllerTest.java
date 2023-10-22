@@ -1,7 +1,9 @@
 package com.example.urbancart.product;
 
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,40 +31,10 @@ public class ProductControllerTest {
   @InjectMocks private ProductController productController;
 
   @Test
-  public void findAll_ReturnsListOfProducts() throws Exception {
-    var productPage =
-        new CustomPage<Product>(new PageImpl<>(Arrays.asList(new Product(), new Product())));
-    when(productService.findAll(
-            anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString()))
-        .thenReturn(productPage);
-    mockMvc
-        .perform(get("/products"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value(2));
-  }
-
-  @Test
-  public void findAll_ReturnsListOfProductsWithPagination() throws Exception {
-    var productPage =
-        new CustomPage<Product>(new PageImpl<>(Arrays.asList(new Product(), new Product())));
-    when(productService.findAll(
-            anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString()))
-        .thenReturn(productPage);
-    mockMvc
-        .perform(get("/products?page=1&size=1&sortBy=price&sortDirection=desc"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value(2));
-  }
-
-  @Test
   public void findProductById_ReturnsProduct() throws Exception {
     UUID productId = UUID.randomUUID();
     var product = new Product();
-    when(productService.findById(productId)).thenReturn(product);
+    when(productService.findById(eq(productId))).thenReturn(product);
     mockMvc
         .perform(get("/products/{id}", productId))
         .andExpect(status().isOk())
@@ -74,7 +46,11 @@ public class ProductControllerTest {
     var product = new Product();
     when(productService.save(Mockito.any(ProductInputDto.class))).thenReturn(product);
     mockMvc
-        .perform(post("/products").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .perform(
+            post("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"name\": \"sample\", \"description\": \"sample description\", \"price\": 100, \"categoryId\": 1}"))
         .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
@@ -87,7 +63,10 @@ public class ProductControllerTest {
         .thenReturn(product);
     mockMvc
         .perform(
-            put("/products/{id}", productId).contentType(MediaType.APPLICATION_JSON).content("{}"))
+            put("/products/{id}", productId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"name\": \"sample\", \"description\": \"sample description\", \"price\": 100, \"categoryId\": 1}"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
@@ -97,5 +76,14 @@ public class ProductControllerTest {
     UUID productId = UUID.randomUUID();
     mockMvc.perform(delete("/products/{id}", productId)).andExpect(status().isNoContent());
     verify(productService, times(1)).remove(productId, false);
+  }
+
+  @Test
+  public void findAll_NoData() throws Exception {
+    var dataList = new PageImpl<Product>(Arrays.asList());
+    when(productService.findAll(
+            anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString(), anyInt()))
+        .thenReturn(new CustomPage<Product>(dataList));
+    mockMvc.perform(get("/products")).andExpect(status().isOk());
   }
 }

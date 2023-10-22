@@ -41,7 +41,7 @@ class ProductServiceTest {
             any(Pageable.class), anyBoolean(), anyString()))
         .thenReturn(new PageImpl<>(productList));
 
-    var result = productService.findAll(0, 10, "name", "asc", false, "");
+    var result = productService.findAll(0, 10, "name", "asc", false, "", null);
 
     assertNotNull(result);
     verify(productRepository, times(1))
@@ -70,14 +70,14 @@ class ProductServiceTest {
 
   @Test
   void testSave() {
-    var uuid = UUID.randomUUID();
+    Long categoryId = Long.MIN_VALUE;
     var category = new Category();
-    category.setId(uuid);
+    category.setId(categoryId);
 
-    when(categoryService.findById(eq(uuid))).thenReturn(category);
+    when(categoryService.findById(eq(categoryId))).thenReturn(category);
 
     var productInputDto = new ProductInputDto();
-    productInputDto.setCategoryId(uuid);
+    productInputDto.setCategoryId(categoryId);
 
     var product = new Product();
     product.setCategory(category);
@@ -132,8 +132,8 @@ class ProductServiceTest {
             any(Pageable.class), anyBoolean(), anyString()))
         .thenReturn(new PageImpl<>(productList));
 
-    var resultAsc = productService.findAll(0, 10, "name", "asc", false, "");
-    var resultDesc = productService.findAll(0, 10, "name", "desc", false, "");
+    var resultAsc = productService.findAll(0, 10, "name", "asc", false, "", null);
+    var resultDesc = productService.findAll(0, 10, "name", "desc", false, "", null);
 
     assertNotNull(resultDesc);
     assertNotNull(resultAsc);
