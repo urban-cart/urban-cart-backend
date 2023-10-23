@@ -39,6 +39,22 @@ class CategoryServiceTest {
   }
 
   @Test
+  void testSave_ifAlreadyExist() {
+    CategoryInputDto categoryInputDto =
+        new CategoryInputDto("sample", "sample description", "sample image url");
+    // Category category = new Category();
+    // when(modelMapper.map(categoryInputDto, Category.class)).thenReturn(category);
+    // when(categoryRepository.save(category)).thenReturn(category);
+    when(categoryRepository.existsByName(categoryInputDto.getName())).thenReturn(true);
+    assertThrows(
+        ResponseStatusException.class,
+        () -> {
+          categoryService.save(categoryInputDto);
+        },
+        "Category with this name already exists");
+  }
+
+  @Test
   void findById_NotFound() {
     Long categoryId = Long.MIN_VALUE;
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());

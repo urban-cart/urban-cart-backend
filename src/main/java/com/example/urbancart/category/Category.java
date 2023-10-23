@@ -1,5 +1,6 @@
 package com.example.urbancart.category;
 
+import com.example.urbancart.common.convertor.ToLowerCase;
 import com.example.urbancart.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -9,9 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
@@ -29,6 +29,8 @@ public class Category {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull
+  @ToLowerCase
   @Column(nullable = false, unique = true)
   private String name;
 
@@ -51,11 +53,4 @@ public class Category {
 
   @Column(name = "image_url")
   private String imageUrl;
-
-  @PrePersist
-  @PreUpdate
-  public void prePersist() {
-    if (this.name == null) throw new IllegalArgumentException("Name cannot be null");
-    this.name = this.name.toLowerCase();
-  }
 }

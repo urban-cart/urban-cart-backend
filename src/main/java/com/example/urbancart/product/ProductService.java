@@ -1,5 +1,7 @@
 package com.example.urbancart.product;
 
+import static org.springframework.data.domain.Sort.Direction;
+
 import com.example.urbancart.category.CategoryService;
 import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
@@ -32,8 +34,7 @@ public class ProductService {
       String search,
       Integer categoryId) {
 
-    var direction =
-        sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+    var direction = sortDirection.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     var pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
     var data =
         (categoryId == null)
@@ -63,17 +64,16 @@ public class ProductService {
 
   @CachePut(key = "#id", unless = "#result == null", value = "product")
   public Product update(UUID id, ProductInputDto product) {
-    var productToUpdate =
-        this.productRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+    var productToUpdate = findById(id);
     var category = categoryService.findById(product.getCategoryId());
+
     productToUpdate.setName(product.getName());
     productToUpdate.setPrice(product.getPrice());
     productToUpdate.setQuantity(product.getQuantity());
     productToUpdate.setDescription(product.getDescription());
     productToUpdate.setCategory(category);
+    productToUpdate.setImageUrl(product.getImageUrl());
+
     return this.productRepository.save(productToUpdate);
   }
 

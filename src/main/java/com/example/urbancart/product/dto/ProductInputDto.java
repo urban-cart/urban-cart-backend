@@ -20,5 +20,7 @@ public class ProductInputDto {
   @Min(0)
   private Integer quantity;
 
+  private String imageUrl;
+
   private Long categoryId;
 }

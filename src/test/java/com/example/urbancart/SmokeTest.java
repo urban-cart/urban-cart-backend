@@ -2,6 +2,7 @@ package com.example.urbancart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.urbancart.auth.AuthController;
 import com.example.urbancart.category.CategoryController;
 import com.example.urbancart.hello.HelloController;
 import com.example.urbancart.image.ImageController;
@@ -16,13 +17,16 @@ class SmokeTest {
   @Autowired private ProductController productController;
   @Autowired private CategoryController categoryController;
   @Autowired private ImageController imageController;
+  @Autowired private AuthController authController;
 
+  @Autowired
   @Test
   void contextLoads() {
     assertThat(helloController).isNotNull();
     assertThat(productController).isNotNull();
     assertThat(categoryController).isNotNull();
     assertThat(imageController).isNotNull();
+    assertThat(authController).isNotNull();
   }
 
   @Test

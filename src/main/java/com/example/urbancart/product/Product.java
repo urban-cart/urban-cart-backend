@@ -48,6 +48,9 @@ public class Product {
   @Column(name = "is_deleted")
   private Boolean isDeleted = Boolean.FALSE;
 
+  @Column(name = "image_url")
+  private String imageUrl;
+
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,5 +1,6 @@
 package com.example.urbancart.user;
 
+import com.example.urbancart.common.convertor.ToLowerCase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,12 +8,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
   @Id @GeneratedValue private UUID id;
 
+  @ToLowerCase
   @Column(nullable = false, unique = true)
   private String email;
 
@@ -31,6 +34,14 @@ public class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at", nullable = false)
+  private LocalDateTime updatedAt;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,12 +71,5 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return isVerified;
-  }
-
-  @PrePersist
-  @PreUpdate
-  public void prePersist() {
-    if (this.email == null) throw new IllegalArgumentException("Email cannot be null");
-    this.email = this.email.toLowerCase();
   }
 }

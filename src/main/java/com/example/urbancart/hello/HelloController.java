@@ -8,9 +8,12 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 public class HelloController {
 
-  @GetMapping("/hello")
-  public String helloWorld(@RequestParam(required = false, defaultValue = "World") String name) {
+  record HelloResponse(String message) {}
+
+  @GetMapping(value = "/hello", produces = "application/json")
+  public HelloResponse helloWorld(
+      @RequestParam(required = false, defaultValue = "World") String name) {
     name = HtmlUtils.htmlEscape(name);
-    return String.format("Hello, %s!", name);
+    return new HelloResponse(String.format("Hello, %s!", name));
   }
 }

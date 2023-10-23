@@ -30,11 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     if (request.getRequestURI().startsWith("/auth")) {
       // If the request is for authentication, then skip the filter
-      System.out.println("=====================>Skipping the filter");
       filterChain.doFilter(request, response);
       return;
     }
-    System.out.println("=========================>Inside the filter");
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);

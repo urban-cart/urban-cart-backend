@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,9 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity
 public class SecurityConfig {
   public static final String[] WHITELIST_URL = {
+    // for swagger-ui
     "/v2/api-docs",
     "/v3/api-docs",
     "/v3/api-docs/**",
@@ -29,7 +28,13 @@ public class SecurityConfig {
     "/configuration/security",
     "/swagger-ui/**",
     "/webjars/**",
-    "/swagger-ui.html"
+    "/swagger-ui.html",
+    // Custom Controller
+    "/hello",
+    "/images/**",
+    "/auth/login",
+    "/auth/register",
+    "/auth/refresh",
   };
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;
@@ -38,17 +43,7 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            auth ->
-                auth.requestMatchers(WHITELIST_URL)
-                    .permitAll()
-                    .requestMatchers("/auth/**")
-                    .permitAll()
-                    .requestMatchers("/hello")
-                    .permitAll()
-                    .requestMatchers("/images/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
+            auth -> auth.requestMatchers(WHITELIST_URL).permitAll().anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

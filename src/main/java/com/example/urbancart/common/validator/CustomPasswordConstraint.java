@@ -13,7 +13,9 @@ public class CustomPasswordConstraint
   public boolean isValid(Object obj, ConstraintValidatorContext context) {
     if (obj instanceof IConfirmPassword) {
       var registerDto = (IConfirmPassword) obj;
-      if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
+      if (registerDto.getPassword() == null
+          || registerDto.getConfirmPassword() == null
+          || !registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
         context.disableDefaultConstraintViolation();
         context
             .buildConstraintViolationWithTemplate("Password and Confirm Password do not match")
@@ -22,6 +24,6 @@ public class CustomPasswordConstraint
         return false;
       }
     }
-    return false;
+    return true;
   }
 }

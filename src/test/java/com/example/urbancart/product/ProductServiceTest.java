@@ -11,6 +11,7 @@ import static org.mockito.Mockito.*;
 import com.example.urbancart.category.Category;
 import com.example.urbancart.category.CategoryService;
 import com.example.urbancart.product.dto.ProductInputDto;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -155,5 +156,32 @@ class ProductServiceTest {
                 }),
             anyBoolean(),
             anyString());
+  }
+
+  @Test
+  void testFindAllByCategoryId() {
+    var productList = new ArrayList<Product>();
+    var category = new Category();
+    category.setId(1L);
+    category.setName("Category 1");
+    for (int i = 0; i < 10; i++) {
+      var product = new Product();
+      product.setId(UUID.randomUUID());
+      product.setName("Product " + i);
+      product.setDescription("Description " + i);
+      product.setPrice(BigInteger.valueOf(10));
+      product.setCategory(category);
+      productList.add(product);
+    }
+    when(productRepository.findAllByIsDeletedAndNameContainingIgnoreCaseAndCategoryId(
+            any(Pageable.class), anyBoolean(), anyString(), any(Integer.class)))
+        .thenReturn(new PageImpl<>(productList));
+
+    var result = productService.findAll(0, 10, "name", "asc", false, "", 1);
+
+    assertNotNull(result);
+    verify(productRepository, times(1))
+        .findAllByIsDeletedAndNameContainingIgnoreCaseAndCategoryId(
+            any(Pageable.class), anyBoolean(), anyString(), any(Integer.class));
   }
 }

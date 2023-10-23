@@ -1,30 +1,34 @@
 package com.example.urbancart.auth;
 
 import com.example.urbancart.auth.dto.AuthResponseDto;
+import com.example.urbancart.auth.dto.ChangePasswordDto;
 import com.example.urbancart.auth.dto.LoginDto;
 import com.example.urbancart.auth.dto.RegisterDto;
 import com.example.urbancart.user.User;
-import com.example.urbancart.user.UserService;
+import com.example.urbancart.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-  private final UserService userService;
+  private final UserRepository userRepository;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final PasswordEncoder passwordEncoder;
 
   public AuthResponseDto login(LoginDto loginDto) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-    var user = userService.findByEmail(loginDto.getEmail());
+    var user = findByEmail(loginDto.getEmail());
     return jwtService.generateTokens(user);
   }
 
@@ -37,14 +41,38 @@ public class AuthService {
     }
     refreshToken = authHeader.substring(7); // The part after "Bearer "
     userEmail = jwtService.extractEmail(refreshToken);
-    var user = userService.findByEmail(userEmail);
+    var user = findByEmail(userEmail);
     if (user == null) {
       throw new IllegalArgumentException("Invalid token");
     }
     return jwtService.generateTokens(user);
   }
 
-  public User register(@Valid RegisterDto user) {
-    return userService.save(user.getEmail(), user.getPassword());
+  public User register(@Valid RegisterDto register) {
+    User user = new User();
+    user.setEmail(register.getEmail());
+    user.setPassword(passwordEncoder.encode(register.getPassword()));
+    if (userRepository.existsByEmail(user.getEmail())) {
+      throw new IllegalStateException("User with this email already exists");
+    }
+    return userRepository.save(user);
+  }
+
+  public User changePassword(ChangePasswordDto request, Principal connectedUser) {
+    User user = findByEmail(connectedUser.getName());
+    if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+      throw new IllegalStateException("Old password is incorrect");
+    }
+    if (!request.getPassword().equals(request.getConfirmPassword())) {
+      throw new IllegalStateException("New password and confirm password do not match");
+    }
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    return userRepository.save(user);
+  }
+
+  public User findByEmail(String email) {
+    return userRepository
+        .findByEmail(email)
+        .orElseThrow(() -> new IllegalStateException("The credentials are incorrect"));
   }
 }
