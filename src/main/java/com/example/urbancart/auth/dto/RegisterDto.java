@@ -1,5 +1,7 @@
 package com.example.urbancart.auth.dto;
 
+import com.example.urbancart.common.validator.ConfirmPasswordValidator;
+import com.example.urbancart.common.validator.IConfirmPassword;
 import com.example.urbancart.user.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +10,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class RegisterDto {
+@ConfirmPasswordValidator
+public class RegisterDto implements IConfirmPassword {
   @Email private String email;
 
   @NotNull

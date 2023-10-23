@@ -17,10 +17,10 @@ public class UserService {
     if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
       throw new IllegalStateException("Old password is incorrect");
     }
-    if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+    if (!request.getPassword().equals(request.getConfirmPassword())) {
       throw new IllegalStateException("New password and confirm password do not match");
     }
-    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
     return userRepository.save(user);
   }
 
