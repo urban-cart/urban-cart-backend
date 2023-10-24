@@ -35,20 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
     String authHeader = request.getHeader("Authorization");
-    System.out.println("Running the filter" + authHeader);
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      System.out.println("Invalid token");
       filterChain.doFilter(request, response);
       return;
     }
-    System.out.println("Valid token");
     String token = authHeader.substring(7); // The part after "Bearer "
-    String userEmail = jwtService.extractEmail(token);
+    String userEmail = jwtService.extractEmail(token, false);
 
     UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-    System.out.println("User details: " + userDetails);
-    if (jwtService.isTokenValid(token, userDetails)) {
-      System.out.println("Token is============= valid");
+    if (jwtService.isTokenValid(token, userDetails, false)) {
       var authentication =
           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

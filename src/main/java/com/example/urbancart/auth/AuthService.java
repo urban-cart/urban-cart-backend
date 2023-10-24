@@ -42,7 +42,7 @@ public class AuthService {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
     }
     refreshToken = authHeader.substring(7); // The part after "Bearer "
-    userEmail = jwtService.extractEmail(refreshToken);
+    userEmail = jwtService.extractEmail(refreshToken, true);
     var user = findByEmail(userEmail);
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");

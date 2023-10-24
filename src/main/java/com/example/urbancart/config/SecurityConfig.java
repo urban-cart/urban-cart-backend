@@ -39,6 +39,7 @@ public class SecurityConfig {
     "/auth/change-password",
     // Error
     "/error",
+    "**" // TODO: REMOVE THIS
   };
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;

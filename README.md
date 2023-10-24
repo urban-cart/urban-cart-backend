@@ -5,6 +5,7 @@ export POSTGRES_USER=your_username
 export POSTGRES_PASSWORD=your_password
 export POSTGRES_JDBC_URL=jdbc:postgresql://localhost:5432/${POSTGRES_DB}
 export JWT_SECRET=your_secret
+export JWT_REFRESH_SECRET=your_refresh_secret
 export JWT_EXPIRATION=3600000  # 1 hour
 export JWT_REFRESH_EXPIRATION=604800000 # 7 days
 ```
