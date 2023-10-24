@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.example.urbancart.auth.JwtService;
 import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -23,12 +25,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerTest {
   @Autowired private MockMvc mockMvc;
-
   @MockBean private ProductService productService;
-
   @InjectMocks private ProductController productController;
+  @MockBean private JwtService jwtService;
 
   @Test
   public void findProductById_ReturnsProduct() throws Exception {

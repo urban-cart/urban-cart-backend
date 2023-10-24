@@ -19,7 +19,6 @@ class SmokeTest {
   @Autowired private ImageController imageController;
   @Autowired private AuthController authController;
 
-  @Autowired
   @Test
   void contextLoads() {
     assertThat(helloController).isNotNull();
