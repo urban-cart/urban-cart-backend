@@ -1,6 +1,6 @@
 package com.example.urbancart.common;
 
-import java.util.List;
+import com.example.urbancart.common.dto.ErrorResponse;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-  record ErrorResponse(Long timestamp, Integer status, String message, List<String> errors) {}
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)

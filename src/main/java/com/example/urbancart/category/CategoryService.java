@@ -2,8 +2,8 @@ package com.example.urbancart.category;
 
 import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -11,16 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
   public final CategoryRepository categoryRepository;
   private final ModelMapper modelMapper;
-
-  @Autowired
-  public CategoryService(CategoryRepository categoryRepository, ModelMapper modelMapper) {
-    this.categoryRepository = categoryRepository;
-    this.modelMapper = modelMapper;
-  }
 
   public Category save(CategoryInputDto category) {
     if (categoryRepository.existsByName(category.getName())) {

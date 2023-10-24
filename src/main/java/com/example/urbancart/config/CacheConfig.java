@@ -1,4 +1,4 @@
-package com.example.urbancart.common.config;
+package com.example.urbancart.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.concurrent.TimeUnit;

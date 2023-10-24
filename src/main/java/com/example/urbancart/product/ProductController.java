@@ -4,7 +4,7 @@ import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
 import jakarta.validation.Valid;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
   public final ProductService productService;
-
-  @Autowired
-  public ProductController(ProductService productService) {
-    this.productService = productService;
-  }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

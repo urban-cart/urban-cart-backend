@@ -3,25 +3,28 @@ package com.example.urbancart.category;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.example.urbancart.auth.JwtService;
 import com.example.urbancart.category.dto.CategoryInputDto;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CategoryController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CategoryControllerTest {
   @Autowired private MockMvc mockMvc;
   @MockBean private CategoryService categoryService;
   @InjectMocks private CategoryController categoryController;
+  @MockBean private JwtService jwtService;
 
   @Test
   public void findAll_ReturnsListOfCategories() throws Exception {
@@ -60,7 +63,7 @@ public class CategoryControllerTest {
             post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"sample\", \"description\": \"sample description\"}"))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(
             content()

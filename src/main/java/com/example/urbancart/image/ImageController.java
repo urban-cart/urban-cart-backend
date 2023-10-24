@@ -1,4 +1,4 @@
-package com.example.urbancart.hello;
+package com.example.urbancart.image;
 
 import java.io.IOException;
 import java.io.InputStream;
