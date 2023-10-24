@@ -30,7 +30,8 @@ public class User implements UserDetails {
 
   @JsonIgnore private String password;
 
-  private Boolean isVerified = Boolean.FALSE;
+  // add email verification later
+  private Boolean isVerified = Boolean.TRUE;
 
   @Enumerated(EnumType.STRING)
   private Role role;

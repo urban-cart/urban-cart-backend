@@ -8,7 +8,7 @@ export JWT_SECRET=your_secret
 export JWT_EXPIRATION=3600000  # 1 hour
 export JWT_REFRESH_EXPIRATION=604800000 # 7 days
 ```
-
+<u>note</u>: e JWT JWA Specification (RFC 7518, Section 3.2) states that keys used with HMAC-SHA algorithms MUST have a size >= 256 bits (the key size must be greater than or equal to the hash output size)
 ### Development Commands
 
 | Command                     | Description                 |

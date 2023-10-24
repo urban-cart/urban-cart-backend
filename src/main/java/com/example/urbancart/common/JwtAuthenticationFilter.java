@@ -28,21 +28,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NotNull HttpServletResponse response,
       @NotNull FilterChain filterChain)
       throws ServletException, IOException {
-    if (request.getRequestURI().startsWith("/auth")) {
+    if (request.getRequestURI().startsWith("/auth")
+        && !request.getRequestURI().equals("/auth/me")) {
       // If the request is for authentication, then skip the filter
       filterChain.doFilter(request, response);
       return;
     }
     String authHeader = request.getHeader("Authorization");
+    System.out.println("Running the filter" + authHeader);
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      System.out.println("Invalid token");
       filterChain.doFilter(request, response);
       return;
     }
+    System.out.println("Valid token");
     String token = authHeader.substring(7); // The part after "Bearer "
     String userEmail = jwtService.extractEmail(token);
 
     UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+    System.out.println("User details: " + userDetails);
     if (jwtService.isTokenValid(token, userDetails)) {
+      System.out.println("Token is============= valid");
       var authentication =
           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

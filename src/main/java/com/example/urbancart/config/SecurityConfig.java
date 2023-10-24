@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
   public static final String[] WHITELIST_URL = {
-    // for swagger-ui
+    // Swagger-ui
     "/v2/api-docs",
     "/v3/api-docs",
     "/v3/api-docs/**",
@@ -32,9 +32,13 @@ public class SecurityConfig {
     // Custom Controller
     "/hello",
     "/images/**",
+    // Auth Controller
     "/auth/login",
     "/auth/register",
     "/auth/refresh",
+    "/auth/change-password",
+    // Error
+    "/error",
   };
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;
@@ -46,7 +50,8 @@ public class SecurityConfig {
             auth -> auth.requestMatchers(WHITELIST_URL).permitAll().anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .logout(logout -> logout.disable());
 
     return http.build();
   }

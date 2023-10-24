@@ -1,4 +1,4 @@
-package com.example.urbancart.user.dto;
+package com.example.urbancart.auth.dto;
 
 import com.example.urbancart.common.validator.ConfirmPasswordValidator;
 import com.example.urbancart.common.validator.IConfirmPassword;

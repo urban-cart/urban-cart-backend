@@ -12,10 +12,12 @@ import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +39,13 @@ public class AuthService {
     final String refreshToken;
     final String userEmail;
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      throw new IllegalArgumentException("Invalid token");
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
     }
     refreshToken = authHeader.substring(7); // The part after "Bearer "
     userEmail = jwtService.extractEmail(refreshToken);
     var user = findByEmail(userEmail);
     if (user == null) {
-      throw new IllegalArgumentException("Invalid token");
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
     }
     return jwtService.generateTokens(user);
   }
@@ -52,8 +54,10 @@ public class AuthService {
     User user = new User();
     user.setEmail(register.getEmail());
     user.setPassword(passwordEncoder.encode(register.getPassword()));
+    user.setRole(register.getRole());
     if (userRepository.existsByEmail(user.getEmail())) {
-      throw new IllegalStateException("User with this email already exists");
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, "The email is already used by another user");
     }
     return userRepository.save(user);
   }
@@ -73,6 +77,6 @@ public class AuthService {
   public User findByEmail(String email) {
     return userRepository
         .findByEmail(email)
-        .orElseThrow(() -> new IllegalStateException("The credentials are incorrect"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email"));
   }
 }
