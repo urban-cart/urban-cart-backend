@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Seeder {
-  private static String categorySeederFile = "data/categories.json";
+  private static final String categorySeederFile = "data/categories.json";
 
   private final CategoryRepository categoryRepository;
   private final ProductRepository productRepository;
@@ -43,9 +43,7 @@ public class Seeder {
           new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
       ObjectMapper objectMapper = new ObjectMapper();
       var categories = objectMapper.readValue(jsonString, new TypeReference<List<Category>>() {});
-      for (var category : categories) {
-        categoryRepository.save(category);
-      }
+      categoryRepository.saveAll(categories);
     }
     return categoryRepository.findAll();
   }

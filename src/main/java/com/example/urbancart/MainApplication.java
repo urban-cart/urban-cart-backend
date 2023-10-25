@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 @EnableCaching
 @SpringBootApplication
 public class MainApplication {
-  private static Logger logger = LogManager.getLogger(MainApplication.class);
+  private static final Logger logger = LogManager.getLogger(MainApplication.class);
 
   public static void main(String[] args) {
     SpringApplication.run(MainApplication.class, args);

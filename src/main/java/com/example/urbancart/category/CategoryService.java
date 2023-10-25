@@ -39,7 +39,7 @@ public class CategoryService {
 
   @CachePut(key = "#id", unless = "#result == null", value = "category")
   public Category update(Long id, CategoryInputDto category) {
-    var categoryModel = this.findById(id);
+    var categoryModel = findById(id);
     categoryModel.setName(category.getName());
     categoryModel.setDescription(category.getDescription());
     return this.categoryRepository.save(categoryModel);

@@ -42,17 +42,14 @@ public class ProductService {
                 pageable, isDeleted, search)
             : this.productRepository.findAllByIsDeletedAndNameContainingIgnoreCaseAndCategoryId(
                 pageable, isDeleted, search, categoryId);
-    return new CustomPage<Product>(data);
+    return new CustomPage<>(data);
   }
 
   @Cacheable(key = "#id", unless = "#result == null", value = "product")
   public Product findById(UUID id) {
-    var data =
-        this.productRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-    return data;
+    return this.productRepository
+        .findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
   }
 
   public Product save(ProductInputDto product) {

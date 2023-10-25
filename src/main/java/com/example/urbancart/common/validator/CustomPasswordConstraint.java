@@ -7,12 +7,8 @@ public class CustomPasswordConstraint
     implements ConstraintValidator<ConfirmPasswordValidator, Object> {
 
   @Override
-  public void initialize(ConfirmPasswordValidator constraintAnnotation) {}
-
-  @Override
   public boolean isValid(Object obj, ConstraintValidatorContext context) {
-    if (obj instanceof IConfirmPassword) {
-      var registerDto = (IConfirmPassword) obj;
+    if (obj instanceof IConfirmPassword registerDto) {
       if (registerDto.getPassword() == null
           || registerDto.getConfirmPassword() == null
           || !registerDto.getPassword().equals(registerDto.getConfirmPassword())) {

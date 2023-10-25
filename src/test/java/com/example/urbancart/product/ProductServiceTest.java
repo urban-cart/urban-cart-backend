@@ -1,11 +1,6 @@
 package com.example.urbancart.product;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.example.urbancart.category.Category;
@@ -121,9 +116,7 @@ class ProductServiceTest {
     when(productRepository.findById(productId)).thenReturn(Optional.empty());
     assertThrows(
         ResponseStatusException.class,
-        () -> {
-          productService.update(productId, new ProductInputDto());
-        });
+        () -> productService.update(productId, new ProductInputDto()));
   }
 
   @Test

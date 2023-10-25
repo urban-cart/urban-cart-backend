@@ -13,11 +13,11 @@ export JWT_REFRESH_EXPIRATION=604800000 # 7 days
 ### Development Commands
 
 | Command                     | Description                 |
-| --------------------------- | --------------------------- |
+|-----------------------------|-----------------------------|
 | `$ ./gradlew bootRun`       | Run the development server. |
 | `$ ./gradlew test`          | Run unit tests.             |
 | `$ ./gradlew spotlessApply` | Apply code formatting.      |
-| `$ ./gradlew check`         | Test code coverage          |
+| `$ ./gradlew check`         | Test code coverage.         |
 
 If you want to see code coverage when test fails then run:
 ```bash

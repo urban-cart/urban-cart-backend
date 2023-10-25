@@ -1,7 +1,7 @@
 package com.example.urbancart.common.validator;
 
 public interface IConfirmPassword {
-  public String getPassword();
+  String getPassword();
 
-  public String getConfirmPassword();
+  String getConfirmPassword();
 }

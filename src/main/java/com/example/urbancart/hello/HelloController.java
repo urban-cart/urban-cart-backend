@@ -8,7 +8,7 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 public class HelloController {
 
-  record HelloResponse(String message) {}
+  public record HelloResponse(String message) {}
 
   @GetMapping(value = "/hello", produces = "application/json")
   public HelloResponse helloWorld(

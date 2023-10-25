@@ -62,7 +62,7 @@ public class AuthService {
     return userRepository.save(user);
   }
 
-  public User changePassword(ChangePasswordDto request, Principal connectedUser) {
+  public void changePassword(ChangePasswordDto request, Principal connectedUser) {
     User user = findByEmail(connectedUser.getName());
     if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
       throw new IllegalStateException("Old password is incorrect");
@@ -71,7 +71,7 @@ public class AuthService {
       throw new IllegalStateException("New password and confirm password do not match");
     }
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    return userRepository.save(user);
+    userRepository.save(user);
   }
 
   public User findByEmail(String email) {

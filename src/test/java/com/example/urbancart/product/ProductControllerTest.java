@@ -1,9 +1,5 @@
 package com.example.urbancart.product;
 
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -11,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.urbancart.auth.JwtService;
 import com.example.urbancart.common.CustomPage;
 import com.example.urbancart.product.dto.ProductInputDto;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -82,10 +78,10 @@ public class ProductControllerTest {
 
   @Test
   public void findAll_NoData() throws Exception {
-    var dataList = new PageImpl<Product>(Arrays.asList());
+    var dataList = new PageImpl<Product>(Collections.emptyList());
     when(productService.findAll(
             anyInt(), anyInt(), anyString(), anyString(), anyBoolean(), anyString(), anyInt()))
-        .thenReturn(new CustomPage<Product>(dataList));
+        .thenReturn(new CustomPage<>(dataList));
     mockMvc.perform(get("/products")).andExpect(status().isOk());
   }
 }

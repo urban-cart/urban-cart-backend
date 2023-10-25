@@ -52,7 +52,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-        .logout(logout -> logout.disable());
+        .logout(AbstractHttpConfigurer::disable);
 
     return http.build();
   }
